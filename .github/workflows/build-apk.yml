@@ -21,14 +21,24 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install Dependencies & Build Web
-        run: |
-          npm install
-          npm run build
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Capacitor Sync
+      - name: Install Android SDK Platform
         run: |
-          npx cap sync android
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Capacitor Copy
+        run: npx cap copy android
+
+      - name: Capacitor Update
+        run: npx cap update android
 
       - name: Build APK via Gradle
         run: |
